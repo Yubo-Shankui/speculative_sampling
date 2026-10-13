@@ -1,10 +1,13 @@
 Speculative Sampling — Project Page
 
+Project URL: https://yubo-shankui.github.io/speculative_sampling/
+The former /commit_one/ address redirects from the personal-site repository.
+
 Open index.html in a modern browser. Keep the assets directory alongside it.
 All figures, videos, scripts, and fonts are included locally; no network connection is required.
 
 The production site loads Cloudflare Web Analytics only over HTTPS on
-yubo-shankui.github.io/commit_one (including paths under /commit_one/).
+yubo-shankui.github.io/speculative_sampling (including paths under /speculative_sampling/).
 Local files, localhost previews, and other hosts/paths do not load the analytics
 beacon. The analytics script is external; blocking it does not prevent viewing
 the page. Reports are available in the site owner's Cloudflare Web Analytics

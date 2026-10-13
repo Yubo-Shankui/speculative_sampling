@@ -7,6 +7,7 @@
 <meta name="description" content="Speculative Sampling decouples joint generation from output commitment, removing chunk duration as a hard constraint on interaction granularity.">
 <meta property="og:title" content="Speculative Sampling — Interactive Video Generation">
 <meta property="og:description" content="Large-chunk joint generation with fine-grained output commitment for interactive video.">
+<link rel="canonical" href="https://yubo-shankui.github.io/speculative_sampling/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23121212'/%3E%3Crect x='5' y='9' width='6' height='14' rx='1' fill='%23f5ab4a'/%3E%3Cpath d='M15 9h12v14H15z' fill='none' stroke='%23f5ab4a' stroke-width='1.5' stroke-dasharray='3 2'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css?v=20261013-fig1-v4">
 <script defer src="site-config.js?v=20261013-name-preview"></script><script defer src="app.js?v=20261013-fig1-v4"></script>
@@ -126,7 +127,7 @@
 (() => {
   const { protocol, hostname, pathname } = window.location;
   if (protocol !== 'https:' || hostname !== 'yubo-shankui.github.io') return;
-  if (pathname !== '/commit_one' && !pathname.startsWith('/commit_one/')) return;
+  if (pathname !== '/speculative_sampling' && !pathname.startsWith('/speculative_sampling/')) return;
   const beacon = document.createElement('script');
   beacon.type = 'module';
   beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
