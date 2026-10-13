@@ -3,28 +3,28 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><meta name="color-scheme" content="dark">
-<title>Commit-One — Interactive Video Generation</title>
-<meta name="description" content="Commit-One decouples joint generation from output commitment, removing chunk duration as a hard constraint on interaction granularity.">
-<meta property="og:title" content="Commit-One — Interactive Video Generation">
+<title>Speculative Sampling — Interactive Video Generation</title>
+<meta name="description" content="Speculative Sampling decouples joint generation from output commitment, removing chunk duration as a hard constraint on interaction granularity.">
+<meta property="og:title" content="Speculative Sampling — Interactive Video Generation">
 <meta property="og:description" content="Large-chunk joint generation with fine-grained output commitment for interactive video.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23121212'/%3E%3Crect x='5' y='9' width='6' height='14' rx='1' fill='%23f5ab4a'/%3E%3Cpath d='M15 9h12v14H15z' fill='none' stroke='%23f5ab4a' stroke-width='1.5' stroke-dasharray='3 2'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=20261008-2">
-<script defer src="site-config.js?v=20261008-4"></script><script defer src="app.js"></script>
+<link rel="stylesheet" href="styles.css?v=20261013-fig1-v4">
+<script defer src="site-config.js?v=20261013-name-preview"></script><script defer src="app.js?v=20261013-fig1-v4"></script>
 </head>
 <body>
 <a class="skip" href="#tldr">Skip to content</a>
-<nav class="toc" aria-label="On this page"><a class="wordmark" href="#top">Commit–One</a><a href="#tldr">TL;DR</a><a href="#introduction">0. Introduction</a><a href="#constraint">1. Chunk boundary</a><a href="#reframe">2. Speculative sampling</a><a href="#mechanism">3. Controller</a><a href="#evidence">4. Choosing K</a><a href="#outlook">5. Design choice</a></nav>
+<nav class="toc" aria-label="On this page"><a class="wordmark" href="#top">Speculative Sampling</a><a href="#tldr">TL;DR</a><a href="#introduction">0. Introduction</a><a href="#constraint">1. Chunk boundary</a><a href="#reframe">2. Speculative sampling</a><a href="#mechanism">3. Controller</a><a href="#evidence">4. Choosing K</a><a href="#outlook">5. Design choice</a></nav>
 <main id="top">
 <header class="hero">
 <div class="topbar"><span>RESEARCH PROJECT</span><span>INTERACTIVE VIDEO GENERATION</span></div>
-<h1>Commit–One</h1>
-<p class="paper-title">Decoupling Generation and Commitment for Interactive Video Generation</p>
+<p class="paper-title hero-title-lead">Make bidirectional models interactive using</p>
+<h1 class="hero-method-name">Speculative Sampling</h1>
 <section id="tldr" class="tldr">
 <h2>TL;DR</h2>
-<p>Small chunk sizes are commonly treated as a hard requirement for low interaction latency. Through a systematic analysis of how chunk size affects interaction latency and generation quality, Commit-One introduces an algorithm–infrastructure co-design that removes this constraint. Chunk size therefore becomes a <strong>quality–efficiency choice rather than an interaction constraint</strong>, enabling low-latency streaming with even large-chunk bidirectional models without complex Self-Forcing-style post-training distillation.</p>
+<p>Small chunk sizes are commonly treated as a hard requirement for low interaction latency. Through a systematic analysis of how chunk size affects interaction latency and generation quality, Speculative Sampling introduces an algorithm–infrastructure co-design that removes this constraint. Chunk size therefore becomes a <strong>quality–efficiency choice rather than an interaction constraint</strong>, enabling low-latency streaming with even large-chunk bidirectional models without complex Self-Forcing-style post-training distillation.</p>
 <section id="demo" class="hero-demo" aria-label="Interactive demo">
 <div class="figure-heading"><span>DEMONSTRATIONS / BIDIRECTIONAL MODEL</span></div>
-<p class="demo-result"><strong>Commit-One turns bidirectional MiniMax H3, which jointly samples five seconds of video at a time, into a low-latency interactive system with approximately 1.5 seconds of end-to-end response latency—from a new user input to the first displayed video frame that responds to it.</strong></p>
+<p class="demo-result"><strong>Our method turns bidirectional MiniMax H3, which jointly samples five seconds of video at a time, into a low-latency interactive system with approximately 1.5 seconds of end-to-end response latency—from a new user input to the first displayed video frame that responds to it.</strong></p>
 <div class="demo-recording">
 <video id="demo-video" controls playsinline preload="metadata" src="assets/demo1_5.mp4" poster="assets/demo1_5-poster.jpg" aria-label="First recorded interactive demo using a bidirectional model with five-second generation chunks"><a href="assets/demo1_5.mp4">Watch the first interactive demo</a></video>
 </div>
@@ -37,7 +37,7 @@
 <section id="introduction" class="introduction">
 <h2>0. Introduction</h2>
 <p>Interactive video generation requires newly arriving conditions to affect an ongoing stream promptly. A natural approach is to generate video autoregressively in small temporal chunks, creating frequent opportunities to incorporate a new condition.</p>
-<p>Smaller chunks, however, also reduce the amount of video modeled jointly and may limit parallel efficiency. Commit-One asks whether fine-grained interaction must require fine-grained generation.</p>
+<p>Smaller chunks, however, also reduce the amount of video modeled jointly and may limit parallel efficiency. We ask whether fine-grained interaction must require fine-grained generation.</p>
 </section>
 </header>
 <section id="constraint">
@@ -61,20 +61,20 @@
 </section>
 <section id="reframe">
 <h2>2. Speculative sampling</h2>
-<p>Small-chunk generation creates frequent opportunities to incorporate new conditions, but limits the size of the bidirectional temporal modeling window. Inspired by <strong>speculative sampling</strong> in large language models, Commit-One predicts ahead: it jointly generates a large chunk under the current condition, assuming it will remain unchanged, and commits the predictions incrementally. Cached predictions are reused while the condition holds; otherwise, the replaceable suffix is discarded and regenerated.</p>
+<p>Small-chunk generation creates frequent opportunities to incorporate new conditions, but limits the size of the bidirectional temporal modeling window. Inspired by speculative decoding in large language models, our method predicts ahead: <strong>it jointly generates a large chunk under the current condition, assuming it will remain unchanged</strong>, and commits the predictions incrementally. Cached predictions are reused while the condition holds; otherwise, the replaceable suffix is discarded and regenerated.</p>
 <figure class="paper-video" aria-label="Animated generation and commitment comparison">
-<video class="concept-video" muted loop playsinline controls preload="metadata" poster="assets/figures/concept-video-poster-v2.png" aria-label="Paper Figure 1 animation: start with empty blocks; demonstrate one-at-a-time versus joint sampling; start output from two positions; finish the current prediction; remove the last two gray predictions in Commit-One and generate a new green chunk.">
-<source src="assets/figures/fig1-generation-commitment-v2.mp4" type="video/mp4">
-<a href="assets/figures/fig1-generation-commitment-v2.mp4">Watch the generation and commitment animation.</a>
+<video class="concept-video" width="1698" height="844" muted playsinline controls preload="metadata" poster="assets/figures/concept-video-poster-v4.png" aria-label="Paper Figure 1 animation on a shared output timeline: the first sampling call completes with one gray latent in the top row and four in both lower rows. A new condition arrives after position 1. Small chunks respond at position 2. Whole-chunk commitment waits to sample green positions 5–8. Speculative Sampling discards gray positions 2–4 and jointly samples green positions 2–5, then 6–9. The top row continues one by one through position 8. The shared output cursor stops after position 8.">
+<source src="assets/figures/fig1-generation-commitment-v4.mp4" type="video/mp4">
+<a href="assets/figures/fig1-generation-commitment-v4.mp4">Watch the generation and commitment animation.</a>
 </video>
-<figcaption>Three strategies: small-chunk generation, large-chunk generation with whole-chunk commitment, and Commit-One. Commit-One combines large-chunk joint prediction with fine-grained commitment, keeping the remaining future revocable.</figcaption>
+<figcaption>Three strategies: small-chunk generation, large-chunk generation with whole-chunk commitment, and Speculative Sampling. Our method combines large-chunk joint prediction with fine-grained commitment, keeping the remaining future revocable.</figcaption>
 </figure>
-<p>Commit-One preserves the bidirectional modeling window of large chunks while supporting the fine-grained interaction of small chunks.</p>
+<p>Our method preserves the bidirectional modeling window of large chunks while supporting the fine-grained interaction of small chunks.</p>
 </section>
 <section id="mechanism">
 <h2>3. Managing a revocable future</h2>
 <p>Speculative sampling requires deciding when to reuse cached predictions, when to replace them, and when to generate more.</p>
-<p>Commit-One manages these decisions with a two-state controller. In <strong>Consume</strong>, the system reuses predictions from the cache and commits them gradually. In <strong>Produce</strong>, the model runs a generation job either to refill the cache or to replace an uncommitted suffix.</p>
+<p>Our method manages these decisions with a two-state controller. In the <strong>Consume</strong> state, the system reuses predictions from the cache and commits them gradually. In the <strong>Produce</strong> state, the model runs a generation job either to refill the cache or to replace an uncommitted suffix.</p>
 <p>When a new condition arrives, playback continues from the committed prefix. The controller keeps the part that can no longer be changed and regenerates the remaining future from the earliest feasible point. If the condition does not change, it simply refills the cache before the available predictions run out.</p>
 <figure class="paper-video" aria-label="A condition switch shown through synchronized controller and output animation">
 <video class="controller-video" muted loop playsinline controls preload="metadata" poster="assets/figures/controller-case-poster.png" aria-label="Camera pans left, then right: controller arrows activate in sync with generation, cached predictions and playback below.">
@@ -83,7 +83,7 @@
 </video>
 <figcaption>Camera pans left → right, K = 4, q = 1. Follow the state above and the output below: reuse, replace a feasible suffix, then refill. Playback continues in both states. <span class="animation-note">Illustrative case; timing is schematic.</span></figcaption>
 </figure>
-<p>Commit-One predicts ahead using the latest observed condition, assuming that it will remain unchanged. If the condition stays the same, the cached predictions are reused—a cache hit. If the condition changes, the affected predictions become a cache miss and must be generated again, introducing some redundant computation.</p>
+<p>Our method predicts ahead using the latest observed condition, assuming that it will remain unchanged. If the condition stays the same, the cached predictions are reused—a cache hit. If the condition changes, the affected predictions become a cache miss and must be generated again, introducing some redundant computation.</p>
 </section>
 
 <section id="evidence">
@@ -113,13 +113,13 @@
 </section>
 <section id="outlook" class="outlook">
 <h2>5. From a constraint to a design choice</h2>
-<p>Interactive video generation has traditionally treated chunk size as a constraint: achieving lower latency meant generating smaller chunks. Commit-One breaks this coupling. The model can generate a large chunk jointly while committing its predictions incrementally. As a result, interaction latency depends less on the video duration of a chunk and more on the computation required to generate and revise predictions as conditions change.</p>
+<p>Interactive video generation has traditionally treated chunk size as a constraint: achieving lower latency meant generating smaller chunks. Our method breaks this coupling. The model can generate a large chunk jointly while committing its predictions incrementally. As a result, interaction latency depends less on the video duration of a chunk and more on the computation required to generate and revise predictions as conditions change.</p>
 <p>Chunk size therefore becomes a design choice rather than a requirement for low-latency interaction. It can be selected based on generation quality and per-chunk generation time. Our experiments suggest that a larger chunk can in fact be preferable, benefiting from broader bidirectional temporal modeling and more effective parallel execution.</p>
 <p>This also opens a different path for interactive video models. <strong>Complex Self-Forcing-style post-training distillation, which can compromise the capabilities of the original model, is no longer a prerequisite for fine-grained interaction.</strong> In the demonstration above, we adapt a bidirectional H3 model with five-second generation chunks into a low-latency streaming system. Instead of forcing generation to become increasingly fine-grained, we can retain high-quality joint generation and focus on making it faster.</p>
 <p class="preview-note">This is an early preview. We are training a new bidirectional H3 model with a longer context window and faster responses to new prompts. <strong>Stay tuned!</strong></p>
 
 </section>
-<footer><a href="#top">Commit-One</a><a href="https://yubo-shankui.github.io/" rel="author">Contact the author ↗</a><a href="#top" aria-label="Back to top">↑</a></footer>
+<footer><a href="#top">Speculative Sampling</a><a href="https://yubo-shankui.github.io/" rel="author">Contact the author ↗</a><a href="#top" aria-label="Back to top">↑</a></footer>
 </main>
 <!-- Cloudflare Web Analytics: production project page only; offline previews stay local. -->
 <script>

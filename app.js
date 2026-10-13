@@ -14,7 +14,7 @@ if ('IntersectionObserver' in window) {
   }, { rootMargin: '-10% 0px -55% 0px', threshold: 0 });
   sections.forEach(section => observer.observe(section));
 }
-const demo = window.COMMIT_ONE_CONFIG?.demo;
+const demo = window.SPECULATIVE_SAMPLING_CONFIG?.demo;
 if (demo?.src) {
   const video = document.querySelector('#demo-video');
   video.src = demo.src;
@@ -37,7 +37,7 @@ for (const video of document.querySelectorAll('.paper-video video')) {
   });
   video.addEventListener('play', () => { userPaused = false; });
   function syncVideo() {
-    if (inView && !document.hidden && !reducedMotion.matches && !userPaused) {
+    if (inView && !document.hidden && !reducedMotion.matches && !userPaused && !video.ended) {
       video.play().catch(() => {});
     } else if (!inView || document.hidden || reducedMotion.matches) {
       video.pause();

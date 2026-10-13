@@ -120,3 +120,14 @@ footer{border-color:var(--line)}
   body{background:#fff}
   .paper-video video,.experiment-figure img,.hero-demo#demo video{border-color:#aaa}
 }
+
+/* Name preview: fit the longer method name without changing the reading layout. */
+h1{font-size:clamp(2.6rem,5vw,4.35rem);text-wrap:balance}
+.toc .wordmark{max-width:165px;line-height:1.4}
+@media(max-width:600px){h1{font-size:clamp(2.2rem,9.4vw,2.8rem)}}
+
+.hero-title-lead{margin-bottom:12px}
+.hero-method-name{margin-bottom:34px}
+
+/* Allow room for the speculative chunk ending at position 9. */
+.concept-video{aspect-ratio:1698 / 844}

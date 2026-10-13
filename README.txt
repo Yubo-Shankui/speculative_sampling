@@ -1,4 +1,4 @@
-Commit-One — Project Page
+Speculative Sampling — Project Page
 
 Open index.html in a modern browser. Keep the assets directory alongside it.
 All figures, videos, scripts, and fonts are included locally; no network connection is required.
