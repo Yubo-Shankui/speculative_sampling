@@ -13,7 +13,7 @@
 </head>
 <body>
 <a class="skip" href="#tldr">Skip to content</a>
-<nav class="toc" aria-label="On this page"><a class="wordmark" href="#top">Commit–One</a><a href="#tldr">TL;DR</a><a href="#introduction">0. Introduction</a><a href="#constraint">1. Chunk boundary</a><a href="#reframe">2. Revocable future</a><a href="#mechanism">3. Controller</a><a href="#evidence">4. Choosing K</a><a href="#outlook">5. Design choice</a></nav>
+<nav class="toc" aria-label="On this page"><a class="wordmark" href="#top">Commit–One</a><a href="#tldr">TL;DR</a><a href="#introduction">0. Introduction</a><a href="#constraint">1. Chunk boundary</a><a href="#reframe">2. Speculative sampling</a><a href="#mechanism">3. Controller</a><a href="#evidence">4. Choosing K</a><a href="#outlook">5. Design choice</a></nav>
 <main id="top">
 <header class="hero">
 <div class="topbar"><span>RESEARCH PROJECT</span><span>INTERACTIVE VIDEO GENERATION</span></div>
@@ -60,21 +60,20 @@
 <p>We therefore ask whether the system can remove the chunk-period waiting constraint without requiring the model to generate smaller chunks.</p>
 </section>
 <section id="reframe">
-<h2>2. Keep the future revocable</h2>
-<p>In a conventional system, one generation call produces <strong>K</strong> latents and commits the whole chunk to the playback queue. Once committed, none of those predictions can be changed.</p>
+<h2>2. Speculative sampling</h2>
+<p>Small-chunk generation creates frequent opportunities to incorporate new conditions, but limits the size of the bidirectional temporal modeling window. Inspired by <strong>speculative sampling</strong> in large language models, Commit-One predicts ahead: it jointly generates a large chunk under the current condition, assuming it will remain unchanged, and commits the predictions incrementally. Cached predictions are reused while the condition holds; otherwise, the replaceable suffix is discarded and regenerated.</p>
 <figure class="paper-video" aria-label="Animated generation and commitment comparison">
 <video class="concept-video" muted loop playsinline controls preload="metadata" poster="assets/figures/concept-video-poster-v2.png" aria-label="Paper Figure 1 animation: start with empty blocks; demonstrate one-at-a-time versus joint sampling; start output from two positions; finish the current prediction; remove the last two gray predictions in Commit-One and generate a new green chunk.">
 <source src="assets/figures/fig1-generation-commitment-v2.mp4" type="video/mp4">
 <a href="assets/figures/fig1-generation-commitment-v2.mp4">Watch the generation and commitment animation.</a>
 </video>
-<figcaption>Commit-One keeps the necessary prefix and leaves the rest of the predicted future revocable.</figcaption>
+<figcaption>Three strategies: small-chunk generation, large-chunk generation with whole-chunk commitment, and Commit-One. Commit-One combines large-chunk joint prediction with fine-grained commitment, keeping the remaining future revocable.</figcaption>
 </figure>
-<p>Commit-One still generates <strong>K</strong> latents together, but it does not commit all of them at once. It commits only the part that must be fixed and keeps the remaining predictions in the cache.</p>
-<p>When a new condition arrives, the committed prefix stays unchanged. The uncommitted future can be withdrawn and generated again under the new condition. The model can therefore generate a large chunk without fixing the entire predicted future.</p>
+<p>Commit-One preserves the bidirectional modeling window of large chunks while supporting the fine-grained interaction of small chunks.</p>
 </section>
 <section id="mechanism">
 <h2>3. Managing a revocable future</h2>
-<p>Keeping part of the predicted future uncommitted makes it revocable. The next question is when to reuse these predictions, when to replace them, and when to generate more.</p>
+<p>Speculative sampling requires deciding when to reuse cached predictions, when to replace them, and when to generate more.</p>
 <p>Commit-One manages these decisions with a two-state controller. In <strong>Consume</strong>, the system reuses predictions from the cache and commits them gradually. In <strong>Produce</strong>, the model runs a generation job either to refill the cache or to replace an uncommitted suffix.</p>
 <p>When a new condition arrives, playback continues from the committed prefix. The controller keeps the part that can no longer be changed and regenerates the remaining future from the earliest feasible point. If the condition does not change, it simply refills the cache before the available predictions run out.</p>
 <figure class="paper-video" aria-label="A condition switch shown through synchronized controller and output animation">
