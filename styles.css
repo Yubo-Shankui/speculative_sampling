@@ -52,6 +52,10 @@ main{max-width:900px;padding:0 46px}
 .toc .wordmark span{color:inherit}
 .hero{padding-top:48px}
 .topbar{margin-bottom:66px;padding-bottom:14px;border-bottom:1px solid var(--line);font-size:.72rem}
+.topbar-links{display:flex;align-items:center;gap:16px}
+.repo-link{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;color:var(--text);text-decoration:none}
+.repo-link:hover{background:var(--panel);border-color:var(--text)}
+.repo-link:focus-visible{outline:2px solid var(--orange);outline-offset:4px}
 .eyebrow{display:none}
 h1{font-size:clamp(3.35rem,6vw,5rem);letter-spacing:-.055em;line-height:1.04;font-weight:600;margin-bottom:17px}
 .period{color:inherit}
@@ -109,7 +113,7 @@ footer{border-color:var(--line)}
   main{padding:0 23px}
   .hero{padding-top:25px}
   .topbar{margin-bottom:42px}
-  .topbar span:last-child{display:none}
+  .topbar .topbar-topic{display:none}
   h1{font-size:2.8rem}
   .paper-title{font-size:1.05rem}
   .introduction p{font-size:1rem}
