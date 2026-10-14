@@ -1,0 +1,26 @@
+.chunk-comparison{margin:32px 0 42px}
+.chunk-comparison .video-review{padding:20px 0;margin:0;border-top:1px solid var(--line)}
+.chunk-comparison h3{font-size:1rem;margin:0 0 16px}
+.chunk-comparison .video-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
+.chunk-comparison button,.chunk-comparison select{font:inherit;font-size:12px;border:1px solid #55554e;background:var(--panel);color:var(--text);border-radius:5px;padding:7px 9px}
+.chunk-comparison button{cursor:pointer}
+.chunk-comparison button:hover{border-color:var(--orange)}
+.chunk-comparison button[data-action="play"]{background:var(--orange);color:var(--bg);border-color:var(--orange)}
+.chunk-comparison label{font-size:12px;color:var(--soft)}
+.chunk-comparison .video-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.chunk-comparison .video-card{min-width:0}
+.chunk-comparison h4{font-size:13px;font-weight:600;margin:10px 0 8px}
+.chunk-comparison video{display:block;width:100%;aspect-ratio:832/480;background:#000;object-fit:contain;border-radius:3px}
+.chunk-comparison .clip-info,.chunk-comparison .clip-link{font-size:11px;margin:6px 0;color:var(--muted)}
+.chunk-comparison .video-error{font-size:12px;color:#ffb4a8}
+.chunk-comparison .video-error:empty{display:none}
+.chunk-comparison .prompt-details{font-size:12px;margin:12px 0}
+.chunk-comparison summary{padding:10px 0;font-size:12px;justify-content:flex-start}
+.chunk-comparison .video-prompt{margin:0 0 12px}
+.chunk-comparison .seek-row,.chunk-comparison .seek-row label{display:flex;align-items:center;gap:10px}
+.chunk-comparison .seek-row{margin-top:14px}
+.chunk-comparison .seek-row label{flex:1}
+.chunk-comparison .row-seek{flex:1;min-width:40px;accent-color:var(--orange)}
+.chunk-comparison .row-time{font-size:12px;min-width:50px;font-variant-numeric:tabular-nums}
+.chunk-comparison .play-status{font-size:12px;margin:8px 0 0;color:var(--muted)}
+@media(max-width:600px){.chunk-comparison .video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.chunk-comparison .video-toolbar{gap:6px}}
