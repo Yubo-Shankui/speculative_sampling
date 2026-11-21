@@ -1,19 +1,30 @@
 'use strict';
 const sectionLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.hash !== '#top');
 const sections = sectionLinks.map(a => document.querySelector(a.hash)).filter(Boolean);
-if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(entries => {
-    const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-    if (!visible.length) return;
-    for (const link of sectionLinks) {
-      const active = link.hash === '#' + visible[0].target.id;
-      link.classList.toggle('active', active);
-      if (active) link.setAttribute('aria-current', 'location');
-      else link.removeAttribute('aria-current');
-    }
-  }, { rootMargin: '-10% 0px -55% 0px', threshold: 0 });
-  sections.forEach(section => observer.observe(section));
+function updateCurrentSection() {
+  const threshold = Math.min(160, window.innerHeight * 0.25);
+  let current = sections[0];
+  for (const section of sections) {
+    if (section.getBoundingClientRect().top <= threshold) current = section;
+  }
+  for (const link of sectionLinks) {
+    const active = link.hash === '#' + current?.id;
+    link.classList.toggle('active', active);
+    if (active) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
 }
+let sectionUpdatePending = false;
+function scheduleSectionUpdate() {
+  if (sectionUpdatePending) return;
+  sectionUpdatePending = true;
+  requestAnimationFrame(() => { sectionUpdatePending = false; updateCurrentSection(); });
+}
+window.addEventListener('scroll', scheduleSectionUpdate, { passive: true });
+window.addEventListener('resize', scheduleSectionUpdate);
+window.addEventListener('load', scheduleSectionUpdate);
+window.addEventListener('hashchange', scheduleSectionUpdate);
+updateCurrentSection();
 const demo = window.SPECULATIVE_SAMPLING_CONFIG?.demo;
 if (demo?.src) {
   const video = document.querySelector('#demo-video');

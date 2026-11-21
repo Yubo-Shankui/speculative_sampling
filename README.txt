@@ -1,18 +1,23 @@
-Speculative Sampling — Project Page
+Speculative Sampling — Anonymous Supplementary Material
 
-Project URL: https://yubo-shankui.github.io/speculative_sampling/
-The former /commit_one/ address redirects from the personal-site repository.
+Open index.html in a current desktop browser. All scripts, fonts, images, and
+videos are included locally; an Internet connection is not required.
 
-Open index.html in a modern browser. Keep the assets directory alongside it.
-All figures, videos, scripts, and fonts are included locally; no network connection is required.
+If your browser restricts local-file media, serve this folder over local HTTP:
+    python3 serve.py --port 8766
+Then open http://127.0.0.1:8766/ in a browser. The included server supports
+video byte-range requests for loading and seeking. It listens only on this computer.
 
-The production site loads Cloudflare Web Analytics only over HTTPS on
-yubo-shankui.github.io/speculative_sampling (including paths under /speculative_sampling/).
-Local files, localhost previews, and other hosts/paths do not load the analytics
-beacon. The analytics script is external; blocking it does not prevent viewing
-the page. Reports are available in the site owner's Cloudflare Web Analytics
-dashboard. The public beacon token is not an account API credential.
+Contents
+- Two recorded interactive demonstrations.
+- LTX quality under update probabilities: all 30 matched image–prompt cases.
+  Columns: K9 0%, K9 35%, K9 70%, K9 100%, native frame-wise K1.
+  Prompts stay fixed; the update events discard and regenerate predictions.
+- LTX action changes: 25 selected cases, three matched configurations.
+  The instruction banner shows the scheduled prompt and its video timestamp.
+- Existing chunk-size comparison: five cases, three sampling-step settings,
+  and four chunk sizes.
 
-The page opens with a recorded interactive demo using a bidirectional model with 5-second generation chunks. It also includes three explanatory animations and the quality/efficiency measurements.
-Videos have native playback controls. With reduced motion enabled, press Play manually.
-This package does not include the manuscript PDF.
+Choose a case, then use “Play all from start” for synchronized comparison.
+“Seek all” moves the videos in each comparison together.
+“Open video” opens the complete video for a larger view.
